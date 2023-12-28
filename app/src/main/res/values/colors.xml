@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="white2">#DEFFFFFF</color>
+    <color name="white3">#70FFFFFF</color>
+    <color name="white4">#ABFFFFFF</color>
+    <color name="white5">#36FFFFFF</color>
+    <color name="splah_color">#121212</color>
+    <color name="gery">#AFAFAF</color>
+    <color name="gery2">#979797</color>
+    <color name="intro_btn">#8875FF</color>
+    <color name="bottom_bar_color">#363636</color>
+    <color name="task_view_priority">#8687E7</color>
+    <color name="task_priority_text">#E8E8E8</color>
+    <color name="close_color">#1D1D1D</color>
+    <color name="red">#FF4949</color>
+
+</resources>

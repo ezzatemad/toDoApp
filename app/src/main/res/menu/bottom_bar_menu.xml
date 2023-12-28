@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        />
+    <item android:id="@+id/menu_calender"
+        android:icon="@drawable/ic_calender"
+        android:title="calender"
+        />
+    <item android:id="@+id/menu_focus"
+        android:icon="@drawable/ic_focuse"
+        android:title="Foucs"
+        />
+
+    <item android:id="@+id/menu_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="Profile"
+        />
+</menu>

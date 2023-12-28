@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "148217941553",
+    "project_id": "request-taxi",
+    "storage_bucket": "request-taxi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148217941553:android:53e8aa3b0bfec8ca278f10",
+        "android_client_info": {
+          "package_name": "com.example.todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjLCJn8SP97V3s6Av6IfhVto1tz1D16LI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

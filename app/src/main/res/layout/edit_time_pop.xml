@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="8dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginStart="12dp"
+    android:background="#A4A4A4"
+    >
+    <DatePicker
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/datePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="true"
+        android:datePickerMode="calendar"
+        android:headerBackground="@color/bottom_bar_color"
+        android:dateTextAppearance="@color/white2"
+        android:weekNumberColor="@color/white2"
+        android:outlineAmbientShadowColor="@color/white2"
+        android:calendarTextColor="@color/white2"
+        android:outlineSpotShadowColor="@color/white2"
+        android:yearListSelectorColor="@color/white2"
+        />
+</LinearLayout>
