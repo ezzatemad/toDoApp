@@ -120,45 +120,6 @@ class indexFragment : Fragment() {
             }
         )
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == EDIT_TASK_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val editedTitle = data?.getStringExtra("edited_title")
-            val editedDescription = data?.getStringExtra("edited_description")
-            val editedDate = data?.getStringExtra("edited_date")
-            val editedPosition = data?.getIntExtra("edited_position", -1)
 
-            if (editedPosition != null && editedPosition >= 0) {
-                // Update the data in your list or adapter
-                val updatedTaskData = taskData(editedPosition.toString(), editedTitle, editedDescription, editedDate)
-                adapter.updateAdapter(listOf(updatedTaskData))
-
-                // Update the task in Firestore
-                if (updatedTaskData.id != null) {
-                    updateTaskInFirestore(updatedTaskData)
-                } else {
-                    Log.e("indexFragment", "Task ID is null")
-                }
-            }
-        }
-    }
-
-    private fun updateTaskInFirestore(updatedTask: taskData) {
-        // Use your own logic to update the task in Firestore
-        // You need to get the document reference based on the taskId and then update the fields
-
-        // For example:
-        val db = Firebase.firestore
-        val collection = db.collection(taskData.TASK)
-        val docRef = collection.document(updatedTask.id!!)
-        docRef.set(updatedTask) // Set the entire task object to update the document
-            .addOnSuccessListener {
-                getTasksFromFireStoreDB(auth.currentUser?.uid!!)
-                Log.d("indexFragment", "DocumentSnapshot successfully updated!")
-            }
-            .addOnFailureListener { e ->
-                Log.w("indexFragment", "Error updating document", e)
-            }
-    }
 }
