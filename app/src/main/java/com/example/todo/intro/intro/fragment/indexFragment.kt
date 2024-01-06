@@ -48,6 +48,7 @@ class indexFragment : Fragment() {
         return dataBinding.root
 
 
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,10 +65,12 @@ class indexFragment : Fragment() {
             override fun onItemClick(list: List<taskData>, position: Int) {
                 val edit_task = list[position]
                 val edit_task_date = list[position].time
+                val edit_task_id = list[position].id
                 val intent = Intent(activity, TaskScreenActivity::class.java)
                 intent.putExtra("position", position)
                 intent.putExtra("edit_task", edit_task)
                 intent.putExtra("edit_task_date", edit_task_date)
+                intent.putExtra("edit_task_id", edit_task_id)
                 startActivityForResult(intent, EDIT_TASK_REQUEST_CODE)
             }
         }
@@ -121,5 +124,14 @@ class indexFragment : Fragment() {
         )
     }
 
+    override fun onResume() {
+        super.onResume()
+        getTasksFromFireStoreDB(auth.currentUser?.uid!!)
+    }
 
+    override fun onStart() {
+        super.onStart()
+        getTasksFromFireStoreDB(auth.currentUser?.uid!!)
+
+    }
 }
