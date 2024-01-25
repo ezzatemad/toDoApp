@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -12,7 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.example.todo"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -38,16 +39,20 @@ android {
 
     buildFeatures {
         viewBinding = true
+        dataBinding = true
+
     }
 
 }
 
 dependencies {
-    implementation ("com.google.android.material:material:1.12.0-alpha02")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation ("com.google.android.material:material:1.12.0-alpha03")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -60,4 +65,11 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-firestore")
+    val lifecycle_version = "2.7.0"
+
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+//    val gradle_version = "8.2.1"
+//    implementation ("androidx.databinding:databinding-runtime:$gradle_version")
+//    kapt ("com.android.databinding:compiler:$gradle_version")
 }

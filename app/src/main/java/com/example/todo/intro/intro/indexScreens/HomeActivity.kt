@@ -4,10 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.todo.R
-import com.example.todo.intro.intro.fragment.bottomSheetFragment
+import com.example.todo.intro.intro.fragment.bottomSheet.bottomSheetFragment
 import com.example.todo.intro.intro.fragment.calenderFragment
 import com.example.todo.intro.intro.fragment.foucesFragment
-import com.example.todo.intro.intro.fragment.indexFragment
+import com.example.todo.intro.intro.fragment.indexFragment.indexFragment
 import com.example.todo.intro.intro.profile.profileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton

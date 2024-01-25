@@ -1,4 +1,4 @@
-package com.example.todo.intro.intro.fragment
+package com.example.todo.intro.intro.fragment.bottomSheet
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.todo.databinding.FragmentBottomSheetBinding
+import com.example.todo.intro.intro.EditTask.taskScreenViewmodel
 import com.example.todo.intro.intro.database.addTaskToFireStore
 import com.example.todo.intro.intro.database.taskData
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -23,10 +25,11 @@ class bottomSheetFragment : BottomSheetDialogFragment() {
     lateinit var dataBinding: FragmentBottomSheetBinding
     private lateinit var auth: FirebaseAuth
     lateinit var time: String
+
+    lateinit var viewModel: bottomSheetViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
         }
     }
 
@@ -35,6 +38,8 @@ class bottomSheetFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         dataBinding = FragmentBottomSheetBinding.inflate(inflater,container,false)
+        viewModel = ViewModelProvider(this)[bottomSheetViewModel::class.java]
+
         return dataBinding.root
     }
 
@@ -45,33 +50,32 @@ class bottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun initView() {
+        auth = Firebase.auth
         calendar = Calendar.getInstance()
         time = getCurrentDateTime()
-        auth = Firebase.auth
         dataBinding.ivClock.setOnClickListener {
             showDatePicker()
         }
         dataBinding.ivSend.setOnClickListener {
-            addTaskToFireStoreDB(auth.currentUser?.uid!!)
+            val userID = auth.currentUser?.uid ?: ""
+            val title = dataBinding.etTaskTitle.text.toString()
+            val description = dataBinding.etTaskDescription.text.toString()
+
+            viewModel.addTaskToFireStoreDB(userID, title, description, time,
+                onSuccess = {
+                    dataBinding.etTaskTitle.text.clear()
+                    dataBinding.etTaskDescription.text.clear()
+                    dismiss()
+                },
+                onFailure = { errorMessage ->
+                    Log.w("TAG", errorMessage)
+                }
+            )
+
         }
     }
 
-    fun addTaskToFireStoreDB(userID: String){
-        val title = dataBinding.etTaskTitle.text.toString()
-        val description = dataBinding.etTaskDescription.text.toString()
-        addTaskToFireStore(
-            taskData(id = userID, title = title, description = description, time = time),
-            userid = userID,
-            addOnSuccessListener = {
-                dataBinding.etTaskTitle.text.clear()
-                dataBinding.etTaskDescription.text.clear()
-                dismiss()
-            },
-            addOnFailureListener = {
-                Log.w("TAG", it.localizedMessage ?:  "")
-            }
-        )
-    } private fun showDatePicker() {
+        private fun showDatePicker() {
         val datePicker = DatePickerDialog(requireContext())
         datePicker.show()
         datePicker.setOnDateSetListener { datePicker, year, month, day ->

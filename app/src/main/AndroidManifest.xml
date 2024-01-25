@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:allowBackup="true"
@@ -13,17 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Todo"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".intro.intro.login2.LoginActivity"
+            android:exported="false" />
         <activity
             android:name=".intro.intro.EditTask.TaskScreenActivity"
             android:exported="true" >
-
         </activity>
         <activity
             android:name=".intro.intro.indexScreens.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".intro.intro.register.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".intro.intro.register.registerActivity"
@@ -42,7 +43,7 @@
             android:exported="false" />
         <activity
             android:name=".intro.intro.splash"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

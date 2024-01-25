@@ -8,7 +8,7 @@ import com.example.todo.R
 import com.example.todo.intro.intro.database.getUserFromFirestore
 import com.example.todo.intro.intro.database.userData
 import com.example.todo.intro.intro.indexScreens.HomeActivity
-import com.example.todo.intro.intro.register.LoginActivity
+import com.example.todo.intro.intro.login2.LoginActivity
 import com.example.todo.intro.intro.register.dataUtils
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -36,10 +36,12 @@ class splash : AppCompatActivity() {
                     dataUtils.firebaseUser = auth.currentUser
                     val intent =Intent(this@splash , HomeActivity::class.java)
                     startActivity(intent)
+                    finish()
             },
                 addOnFailureListener = {
                     val intent = Intent(this@splash, LoginActivity::class.java)
                     startActivity(intent)
+                    finish()
             })
         }
         else{

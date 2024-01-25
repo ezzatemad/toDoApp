@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import com.example.todo.R
-import com.example.todo.intro.intro.register.LoginActivity
+import com.example.todo.intro.intro.login2.LoginActivity
 import com.example.todo.intro.intro.register.registerActivity
 
 class lastIntroActivity : AppCompatActivity() {

@@ -78,7 +78,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_clock_task"
+        android:src="@drawable/timer"
         />
     <TextView
         android:id="@+id/tv_edit_time"
@@ -116,7 +116,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_calender"
+        android:src="@drawable/ic_category"
         />
     <TextView
         android:id="@+id/tv_edit_category"
@@ -154,7 +154,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_pri"
+        android:src="@drawable/flag"
         />
     <TextView
         android:id="@+id/tv_edit_priority"
@@ -192,7 +192,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_delete"
+        android:src="@drawable/trash"
         />
     <TextView
         android:id="@+id/tv_edit_delete"

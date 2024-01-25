@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/bottom_bar_color"
     android:layout_marginTop="24dp"
     android:layout_marginStart="18dp"
-    android:layout_marginEnd="18dp"
-    >
+    android:layout_marginEnd="18dp">
+
     <ImageView
         android:id="@+id/iv_task_check"
         android:layout_width="wrap_content"
@@ -20,8 +21,8 @@
         android:layout_marginStart="8dp"
         android:clickable="true"
         app:layout_constraintEnd_toStartOf="@id/tv_task_title"
-        android:padding="5dp"
-        />
+        android:padding="5dp" />
+
     <ImageView
         android:id="@+id/iv_task_check_completed"
         android:layout_width="wrap_content"
@@ -33,8 +34,8 @@
         android:layout_marginStart="8dp"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/tv_task_title"
-        android:padding="5dp"
-        />
+        android:padding="5dp" />
+
     <TextView
         android:id="@+id/tv_task_title"
         android:layout_width="0dp"
@@ -46,8 +47,8 @@
         android:layout_marginStart="15dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@id/tv_task_priority"
-        />
+        app:layout_constraintEnd_toStartOf="@id/tv_task_priority" />
+
     <TextView
         android:id="@+id/tv_task_date"
         android:layout_width="0dp"
@@ -61,8 +62,8 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toStartOf="@id/tv_task_priority"
-        />
+        app:layout_constraintEnd_toStartOf="@id/tv_task_priority" />
+
     <TextView
         android:id="@+id/tv_task_priority"
         android:layout_width="wrap_content"
@@ -78,8 +79,6 @@
         android:textColor="@color/white"
         android:drawableLeft="@drawable/ic_pri"
         app:layout_constraintStart_toEndOf="@id/tv_task_date"
-        android:drawablePadding="8dp"
-
-        />
+        android:drawablePadding="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
