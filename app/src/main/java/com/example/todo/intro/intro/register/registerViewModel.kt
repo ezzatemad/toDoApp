@@ -3,61 +3,89 @@ package com.example.todo.intro.intro.register
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.todo.intro.intro.database.addUserToFireStore
 import com.example.todo.intro.intro.database.userData
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.launch
+
 class registerViewModel: ViewModel() {
-    private val _viewState = MutableLiveData<RegistrationViewState>()
-    val viewState: LiveData<RegistrationViewState> get() = _viewState
+
+    var channel = Channel<registerIntent>(Channel.UNLIMITED)
+    private val _viewState = MutableStateFlow<registerViewState>(registerViewState.idle)
+    val viewState: StateFlow<registerViewState> get() = _viewState
 
     private val _navigateToHome = MutableLiveData<Boolean>()
     val navigateToHome: LiveData<Boolean> get() = _navigateToHome
 
 
-    fun processIntent(intent: RegistrationViewIntent) {
-        when (intent) {
-            is RegistrationViewIntent.RegisterUserIntent -> registerUser(intent)
+    init {
+        processIntent()
+    }
+
+
+    // Process Intent
+    private fun processIntent() {
+        viewModelScope.launch {
+            channel.consumeAsFlow().collect {
+                when (it) {
+                    is registerIntent.RegisterUserIntent -> {
+                    showLoading()
+                            registerUser (it.username, it.email, it.password)
+                }
+                    }
+            }
         }
     }
-    private fun registerUser(intent: RegistrationViewIntent.RegisterUserIntent) {
-        _viewState.value = RegistrationViewState(isLoading = true)
 
-        // Perform Firebase registration
-        FirebaseAuth.getInstance()
-            .createUserWithEmailAndPassword(intent.email, intent.password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = task.result?.user
-                    addUserToFirestoreDB(user?.uid, intent.username, intent.email, intent.password)
-                    _viewState.value = RegistrationViewState(registrationSuccess = true)
-
+    // Register User (reduce function)
+    private fun registerUser(username: String,
+                             email: String, password: String) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener { authResult ->
+                val uid = authResult.user?.uid
+                if (uid != null) {
+                    addUserToFireStoreDB(uid, username, email, password)
                 } else {
-                    _viewState.value = RegistrationViewState(errorMessage = task.exception?.message)
+                    hideLoadingWithError("User registration failed.")
                 }
             }
+            .addOnFailureListener { exception ->
+                hideLoadingWithError(exception.localizedMessage)
+            }
     }
-    fun reduce(state: RegistrationViewState, action: RegistrationViewAction): RegistrationViewState {
-        return when (action) {
-            is RegistrationViewAction.LoadingAction -> state.copy(isLoading = true)
-            is RegistrationViewAction.RegistrationSuccessAction -> state.copy(isLoading = false, registrationSuccess = true)
-            is RegistrationViewAction.ErrorAction -> state.copy(isLoading = false, errorMessage = action.errorMessage)
-        }
-    }
-     fun addUserToFirestoreDB(uid: String?,
-                              username: String,
-                              email: String,
-                              password: String) {
-        addUserToFireStore(
-            userData(id = uid ?: "", username = username, email = email, password = password),
-            addOnSuccessListener = {
-                _viewState.value = RegistrationViewState(registrationSuccess = true)
-                _navigateToHome.value = true  // Set the navigation event to true
 
+
+    private fun addUserToFireStoreDB(
+        uid: String,
+        username: String,
+        email: String,
+        password: String,
+    ) {
+        addUserToFireStore(
+            userData(id = uid, username = username, email = email, password = password),
+            addOnSuccessListener = {
+                hideLoadingAndNavigateToHome(userData(uid,username, email, password))
             },
             addOnFailureListener = {
-                _viewState.value = RegistrationViewState(errorMessage = it.localizedMessage)
+                hideLoadingWithError("Failed to store user data in Firestore.")
             }
         )
     }
+    private fun showLoading() {
+        _viewState.value = registerViewState.isLoading
+    }
 
+    private fun hideLoadingAndNavigateToHome(userData: userData) {
+        _viewState.value = registerViewState.RegistrationSuccessAction(userData)
+        _navigateToHome.value = true
+    }
+
+    private fun hideLoadingWithError(errorMessage: String) {
+        _viewState.value = registerViewState.ErrorAction(errorMessage)
+    }
 }

@@ -4,15 +4,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.todo.databinding.ActivityRegisterBinding
 import com.example.todo.intro.intro.indexScreens.HomeActivity
 import com.example.todo.intro.intro.login2.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 class registerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -30,14 +31,15 @@ class registerActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[registerViewModel::class.java]
         // Initialize Firebase Auth
         auth = Firebase.auth
+        render()
 
-
-        viewModel.viewState.observe(this, Observer { newState ->
-            handleViewState(newState)
-        })
+//        viewModel.viewState.observe(this, Observer { newState ->
+//            handleViewState(newState)
+//        })
 
         viewModel.navigateToHome.observe(this, Observer { shouldNavigate ->
             if (shouldNavigate) {
+                hideLoadingIndicator()
                 val intent = Intent(this@registerActivity, HomeActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -47,17 +49,19 @@ class registerActivity : AppCompatActivity() {
 
         // Example in the activity
         binding.btnRegister.setOnClickListener {
-            username = binding.etUsername.text.toString()
-            email = binding.etEmail.text.toString()
-            password = binding.etPassword.text.toString()
+            showLoadingIndicator()
+            if (validatedUser()) {
+                val username = binding.etUsername.text.toString()
+                val email = binding.etEmail.text.toString()
+                val password = binding.etPassword.text.toString()
+                val confirmPassword = binding.etConfirmPassword.text.toString()
 
-            viewModel.processIntent(
-                RegistrationViewIntent.RegisterUserIntent(
-                    username,
-                    email,
-                    password
-                )
-            )
+                lifecycleScope.launch {
+                    viewModel.channel.send(
+                        registerIntent.RegisterUserIntent(username, email, password,confirmPassword)
+                    )
+                }
+            }
         }
 
         binding.tvLogin.setOnClickListener {
@@ -67,21 +71,35 @@ class registerActivity : AppCompatActivity() {
 
     }
 
-    private fun handleViewState(state: RegistrationViewState) {
-        if (state.isLoading) {
-            // Show loading progress
-            showLoadingIndicator()
-        } else if (state.registrationSuccess) {
-            // Registration successful, navigate to the next screen or perform other actions
-            if (vaildatedUser()) {
-                viewModel.addUserToFirestoreDB(auth.uid!!, username, email, password)
+    private fun render(){
+        lifecycleScope.launch {
+            viewModel.viewState.collect {
+                when (it) {
+                    is registerViewState.isLoading -> showLoadingIndicator()
+                    is registerViewState.RegistrationSuccessAction -> {
+                        hideLoadingIndicator()
+                        viewModel.navigateToHome.observe(
+                            this@registerActivity,
+                            Observer { shouldNavigate ->
+                                if (shouldNavigate) {
+                                    val intent =
+                                        Intent(this@registerActivity, HomeActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            })
+                    }
+
+                    is registerViewState.ErrorAction ->{
+                        hideLoadingIndicator()
+                }
+                    is registerViewState.idle -> hideLoadingIndicator()
             }
-        } else if (state.errorMessage != null) {
-            // Show error message to the user
-            hideLoadingIndicator()
-            Toast.makeText(this, state.errorMessage, Toast.LENGTH_SHORT).show()
+
+            }
         }
     }
+
         private fun showLoadingIndicator() {
             binding.progressBar.visibility = View.VISIBLE
         }
@@ -89,7 +107,7 @@ class registerActivity : AppCompatActivity() {
         private fun hideLoadingIndicator() {
             binding.progressBar.visibility = View.GONE
         }
-    fun vaildatedUser():Boolean {
+    fun validatedUser():Boolean {
         username = binding.etUsername.text.toString()
         email = binding.etEmail.text.toString()
         password = binding.etPassword.text.toString()
